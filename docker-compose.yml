@@ -1,0 +1,121 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.10
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    container_name: traefik
+
+  flask-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile  # Path to your Dockerfile
+    ports:
+      - "4444:4444"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flask-app.rule=Host(`kartaca.localhost`) && Path(`/pythonapp`)"
+      - "traefik.http.services.flask-app.loadbalancer.server.port=4444"
+      - "traefik.http.routers.flask-app.middlewares=flask-app-staj-prefix"
+      - "traefik.http.middlewares.flask-app-staj-prefix.replacepathregex.regex=^/pythonapp(.*)"
+      - "traefik.http.middlewares.flask-app-staj-prefix.replacepathregex.replacement=/staj$$1"
+      - 'traefik.http.routers.flask-app.entrypoints=http'
+    container_name: flask-app
+
+  go-app:
+    build:
+      context: .
+      dockerfile: goapp/Dockerfile  
+    ports:
+      - "5555:5555"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.goapp.rule=Host(`kartaca.localhost`) && Path(`/goapp`)"
+      - "traefik.http.services.goapp.loadbalancer.server.port=5555"
+      - "traefik.http.routers.goapp.middlewares=goapp-staj-prefix"
+      - "traefik.http.middlewares.goapp-staj-prefix.replacepathregex.regex=^/goapp(.*)"
+      - "traefik.http.middlewares.goapp-staj-prefix.replacepathregex.replacement=/staj$$1"
+      - 'traefik.http.routers.goapp.entrypoints=http'
+    container_name: go-app
+
+  mongo1:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    command: mongod --replSet myReplicaSet --bind_ip_all
+    volumes:
+      - ./db/mongo1/data/db:/data/db
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.mongo1.rule=Host(`mongo1`)"
+    container_name: mongo1
+
+  mongo2:
+    image: mongo:7.0
+    ports:
+      - "27018:27017"
+    command: mongod --replSet myReplicaSet --bind_ip_all
+    volumes:
+      - ./db/mongo2/data/db:/data/db
+    container_name: mongo2
+
+  mongo3:
+    image: mongo:7.0
+    ports:
+      - "27019:27017"
+    command: mongod --replSet myReplicaSet --bind_ip_all
+    volumes:
+      - ./db/mongo3/data/db:/data/db
+    container_name: mongo3  
+  
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    container_name: prometheus
+  
+  grafana:
+    environment:                
+      - GF_SERVER_ROOT_URL=http://kartaca.localhost
+      - GF_SERVER_DOMAIN=kartaca.localhost
+      - GF_SERVER_FROM_SUB_PATH=false
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`kartaca.localhost`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.http.routers.grafana.entrypoints=http"
+    container_name: grafana
+
+  node-exporter:
+    image: quay.io/prometheus/node-exporter
+    container_name: node-exporter
+
+  cadvisor:
+    image: google/cadvisor:latest
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    command:
+      - '-port=8100' 
+    container_name: cadvisor
+
+    
+
