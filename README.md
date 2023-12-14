@@ -43,7 +43,7 @@ docker-compose down
 | Traefik       | [http://localhost:8080](http://localhost:8080)           | -                   |
 | Flask App     | [http://localhost:4444](http://localhost:4444)           | -                   |
 | Random City   | [http://kartaca.localhost/pythonapp](http://kartaca.localhost/pythonapp) <br>  [http://localhost:4444/staj](http://localhost:4444/staj)| -         |
-| Random Country   | [http://kartaca.localhost/goapp](http://kartaca.localhost/goapp) <br>  [http://localhost:4444/staj](http://localhost:5555/staj)| -         | 
+| Random Country   | [http://kartaca.localhost/goapp](http://kartaca.localhost/goapp) <br>  [http://localhost:5555/staj](http://localhost:5555/staj)| -         | 
 | Prometheus    | [http://localhost:9090](http://localhost:9090)           | -                   |
 | Grafana       | [http://kartaca.localhost/grafana](http://kartaca.localhost/grafana) | Username: admin <br> Password: admin |
 
@@ -77,4 +77,4 @@ Grafana: A visualization tool, pre-configured with basic dashboards.
 - [x] Python App Integration
 - [x] Go App Integration
 - [x] Prometheus Integration
-- [x] Grafana Integration (Some minor issues)
+- [x] Grafana Integration 
