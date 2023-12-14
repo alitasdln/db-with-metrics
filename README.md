@@ -5,12 +5,12 @@
 Clone this repository:
 
 ```bash
-git clone https://github.com/your_username/mongodb-replica-set.git
+git clone https://github.com/alitasdln/db-with-metrics.git
 ```
 
 Navigate to the project directory:
 ```bash
-cd mongodb-replica-set
+cd db-with-metrics
 ```
 
 ####Starting the Environment
