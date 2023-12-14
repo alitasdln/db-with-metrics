@@ -1,6 +1,6 @@
 
-###Installation and Usage
-####Setup
+### Installation and Usage
+#### Setup
 
 Clone this repository:
 
@@ -13,7 +13,7 @@ Navigate to the project directory:
 cd db-with-metrics
 ```
 
-####Starting the Environment
+#### Starting the Environment
 
 Start the environment with init script:
 
@@ -22,7 +22,7 @@ sudo ./init-script.sh >/dev/null 2>&1
 ```
 
 
-####Initializing MongoDB Replica Set and Database Population
+#### Initializing MongoDB Replica Set and Database Population
 
 
 After the environment is up and running, execute the initialization script:
@@ -36,7 +36,7 @@ Close everything with:
 docker-compose down
 ```
 
-####Accessing Services
+#### Accessing Services
 
 | Service       | URL                                                     | Credentials         |
 |---------------|---------------------------------------------------------|---------------------|
@@ -61,7 +61,7 @@ MongoDB Replica Set: Three MongoDB instances forming a replica set for high avai
 Prometheus: For monitoring and metrics.
 Grafana: A visualization tool, pre-configured with basic dashboards.
 
-####Directory Structure
+#### Directory Structure
 
     ./db: Contains directories for MongoDB volumes (mongo1, mongo2, mongo3) for persistent data.
     ./prometheus.yml: Configuration file for Prometheus.
