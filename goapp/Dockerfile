@@ -4,11 +4,11 @@ FROM golang:latest
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the source code from your host to the container
-COPY . .
+# Copy the main.go file into the container
+COPY ./goapp/ .
 
 # Build the Go application
-RUN go build -o main ./main.go
+RUN go build -o main .
 
 # Expose the port that your Go application listens on
 EXPOSE 5555
